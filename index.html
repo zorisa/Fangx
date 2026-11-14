@@ -1208,26 +1208,6 @@
         
         .r-footer { text-align: center; font-size: 12px; margin-top: 10px; font-family: 'Times New Roman', serif; font-weight: bold; }
 
-        /* --- 图片签名，带裁剪动画 --- */
-        .signature-img-container {
-            position: absolute; bottom: -20px; right: 5px;
-            width: 220px; height: auto;
-            pointer-events: none;
-            clip-path: inset(0 100% 0 0);
-            transition: clip-path 2.5s cubic-bezier(0.22, 1, 0.36, 1) 1.2s;
-        }
-
-        .receipt-stage.show .signature-img-container {
-            clip-path: inset(0 0 0 0);
-        }
-
-        .signature-img {
-            width: 100%;
-            display: block;
-            transform: rotate(-5deg);
-            mix-blend-mode: multiply;
-        }
-
         /* ============================================================
            第六面：撕裂动画
            ============================================================ */
@@ -1584,7 +1564,6 @@
             /* 第五/六面：小票适配 */
             .receipt-paper { width: 85vw; max-width: 340px; padding: 30px 20px 60px; }
             .tear-paper-top, .tear-paper-bottom { width: 85vw; max-width: 340px; padding: 30px 20px 60px; }
-            .signature-img-container { width: 180px; right: 0; bottom: -10px; }
 
             /* 第七面：碰杯缩放 */
             .cheers-wrap { transform: scale(0.8); margin-top: -20px; }
@@ -2041,11 +2020,6 @@
             
             <div class="r-barcode"></div>
             <div class="r-footer">Red box</div>
-
-            <!-- 图片签名 -->
-            <div class="signature-img-container">
-                <img class="signature-img" src="sign.png" alt="方休的签名">
-            </div>
         </div>
     </div>
 
