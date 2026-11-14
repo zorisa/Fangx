@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 针对移动端优化视口 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>冬</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,23 +15,29 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* 去除移动端点击高亮 */
         }
 
         body {
             background: #fafaf7;
             min-height: 100vh;
+            /* 兼容移动端高度 */
+            min-height: -webkit-fill-available; 
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Inter', -apple-system, 'Helvetica Neue', sans-serif;
             overflow: hidden;
             position: relative;
+            touch-action: pan-y; /* 允许垂直滑动 */
         }
 
         .canvas {
             position: relative;
             width: 100vw;
             height: 100vh;
+            /* 兼容移动端高度 */
+            height: -webkit-fill-available;
             overflow: hidden;
             background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f2f2ef 100%);
         }
@@ -154,7 +161,6 @@
             100% { height: 110px; opacity: 0; }
         }
 
-        /* 恢复：液体从顶部倾注 */
         .liquid {
             position: absolute;
             top: 55px; left: 50%;
@@ -279,7 +285,7 @@
 
         .nickname-input {
             width: 100%;
-            padding: 12px 18px;
+            padding: 14px 18px; /* 增加点击区域 */
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 40px;
@@ -1514,109 +1520,107 @@
             letter-spacing: 2px;
         }
 
-        /* ============ 响应式 ============ */
+        /* ============================================================
+           移动端全面适配重写 (响应式)
+           ============================================================ */
+        
+        /* 平板尺寸及以下 */
         @media (max-width: 900px) {
-            .profile-page { padding: 20px; }
-            .name-group { top: 35%; padding: 16px 24px; }
+            /* 第一面：酒杯缩小，输入框限制宽度 */
+            .glass-container { transform: translate(-50%, -50%) scale(0.85); }
+            .prompt-box { width: 85%; max-width: 320px; }
+            .menu-card { width: 85%; max-width: 360px; }
+
+            /* 第二面：档案页改为纵向流式排布 */
+            .profile-page { padding: 20px; overflow-y: auto; align-items: flex-start; }
+            .profile-inner { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100%; padding: 40px 0; }
+            
+            .name-group { position: relative; top: auto; left: auto; transform: none; margin-bottom: 30px; width: 100%; max-width: 320px; }
+            .name-group:hover { transform: scale(1.02); }
             .profile-name { font-size: 40px; letter-spacing: 8px; }
             
-            .info-box-1 { top: 15%; left: 10%; transform: rotate(0); }
-            .info-box-2 { top: 55%; right: 10%; transform: rotate(0); }
-            .info-box-3 { bottom: 15%; left: 10%; top: auto; transform: rotate(0); }
-            .info-box .value { font-size: 14px; }
+            /* 信息卡片堆叠 */
+            .info-box { position: relative; top: auto; left: auto; right: auto; bottom: auto; width: 100%; max-width: 320px; margin: 0 auto 16px; transform: none !important; }
+            .info-box:hover { transform: translateY(-4px) scale(1.02) !important; }
             
-            .info-box-1:hover { transform: translateY(-4px) scale(1.03); }
-            .info-box-2:hover { transform: translateY(-4px) scale(1.03); }
-            .info-box-3:hover { transform: translateY(-4px) scale(1.03); }
+            .quote-group { position: relative; bottom: auto; left: auto; transform: none; margin-top: 30px; width: 100%; max-width: 320px; }
             
-            .quote-group { bottom: 10%; width: 100%; }
-            .quote-group p { font-size: 15px; }
-            
-            .box-group-1, .box-group-3, .recipe-tag { display: none; }
-            .box-group-2 { bottom: 30%; right: 10%; width: 40px; height: 40px; }
-            .wrapping-vines { opacity: 0.4; }
-            
-            .ring { width: 100px; height: 100px; }
-            @keyframes slideInRingLeft { 100% { left: calc(50% - 55px); } }
-            @keyframes slideInRingRight { 100% { right: calc(50% - 55px); } }
-            
-            @keyframes clashingLeft {
-                0%   { left: calc(50% - 55px); transform: rotateX(60deg) rotateY(30deg) rotateZ(-20deg) translateZ(50px); }
-                30%  { left: calc(50% - 30px); transform: rotateX(75deg) rotateY(45deg) rotateZ(-35deg) translateZ(80px) scale(0.95); }
-                100% { left: calc(50% - 40px); transform: rotateX(65deg) rotateY(35deg) rotateZ(-25deg) translateZ(60px); }
-            }
-            @keyframes clashingRight {
-                0%   { right: calc(50% - 55px); transform: rotateX(60deg) rotateY(-30deg) rotateZ(20deg) translateZ(50px); }
-                30%  { right: calc(50% - 30px); transform: rotateX(75deg) rotateY(-45deg) rotateZ(35deg) translateZ(80px) scale(0.95); }
-                100% { right: calc(50% - 40px); transform: rotateX(65deg) rotateY(-35deg) rotateZ(25deg) translateZ(60px); }
-            }
+            /* 隐藏第二面繁杂的装饰元素 */
+            .bg-blueprint-lines, .wrapping-vines, .recipe-tag, .deco-box { display: none; }
+            .deco-branch-tl, .deco-branch-br, .decor-fireplace { width: 100px; height: auto; opacity: 0.1; }
 
-            .note-content { padding: 30px 20px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
-            .top-title { font-size: 24px; margin-bottom: 30px; }
+            /* 第三面：便签页改为纵向流式排布 */
+            .note-content { padding: 30px 20px; overflow-y: auto; align-items: center; display: flex; flex-direction: column; height: auto; min-height: 100%; }
+            .top-title { font-size: 26px; margin-bottom: 30px; }
             .bg-curve, .art-branch, .scatter-divider { display: none; }
             
-            .layout-left, .layout-right { position: relative; top: auto; left: auto; right: auto; width: 100%; max-width: 340px; margin-bottom: 30px; }
-            
-            .layout-left { flex-direction: column; align-items: center; }
-            .art-bird { width: 100px; height: 60px; margin-bottom: 10px; }
-            .name-outline { width: auto; padding: 6px 16px; font-size: 18px; margin-bottom: 6px; }
-            .name-en { margin-bottom: 10px; }
-            
-            .price-design { margin: 5px 0 20px; }
-            .price-number { font-size: 44px; }
-            .price-orbit { width: 130px; height: 65px; }
+            .layout-left { position: relative; top: auto; left: auto; width: 100%; max-width: 320px; margin-bottom: 30px; }
+            .layout-right { position: relative; top: auto; right: auto; width: 100%; max-width: 320px; margin-bottom: 30px; gap: 20px; }
             
             .ingredients-galaxy { width: 100%; height: auto; transform: none; margin: 20px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
-            .galaxy-svg, .center-bird { display: none; }
-            .ingredient-item { position: relative; top: auto; left: auto; right: auto; bottom: auto; padding: 4px 8px; border: 1px dashed rgba(0,0,0,0.1); border-radius: 4px; flex-direction: row !important; }
+            .galaxy-svg { display: none; }
+            .ingredient-item { position: relative; top: auto; left: auto; right: auto; bottom: auto; padding: 6px 12px; border: 1px dashed rgba(0,0,0,0.15); border-radius: 4px; flex-direction: row !important; font-size: 11px; }
             .ingredient-item::before { display: none !important; }
             
-            .layout-right { gap: 20px; }
-            .note-block { width: 100%; padding: 20px; transform: none !important; border-radius: 4px; }
+            .note-block { width: 100%; padding: 24px 20px; transform: none !important; margin-bottom: 16px; }
             .note-block:hover { transform: translateY(-2px) !important; }
-            .paperclip { top: -16px; right: 16px; width: 16px; height: 40px; }
-            
-            .bottom-page { position: relative; margin-top: 20px; bottom: auto; }
+            .paperclip { top: -14px; right: 20px; width: 16px; height: 40px; }
+            .bottom-page { position: relative; margin-top: 30px; bottom: auto; }
 
-            .rules-cards-wrapper { width: 92%; margin-top: 20px; margin-bottom: 20px; }
-            .rules-card { padding: 30px 20px; border-radius: 8px; transform: rotate(-0.5deg) !important; }
+            /* 第四面：须知卡 */
+            .rules-stage { padding: 20px; overflow-y: auto; align-items: flex-start; }
+            .rules-cards-wrapper { width: 100%; margin-top: 40px; margin-bottom: 40px; }
+            .rules-card { padding: 30px 20px; border-radius: 8px; }
             .rules-card-bg { display: none; }
-            .rules-card .paperclip { top: -16px; right: 20px; width: 16px; height: 40px; }
             .rules-title { font-size: 22px; letter-spacing: 4px; }
             .rules-title span { font-size: 14px; }
             .rule-item { gap: 10px; padding: 10px 0; padding-bottom: 12px; }
             .rule-item:hover { transform: none; background: transparent; box-shadow: none; }
-            .rule-item:hover::before { height: 0; }
             .rule-num { font-size: 10px; }
             .rule-text { font-size: 13px; line-height: 1.7; letter-spacing: 0.5px; }
             .rules-decor { display: none; }
             .stamp { transform: scale(0.7) rotate(-15deg); bottom: -15px; right: -15px; }
-            
-            .confirm-paper { width: 280px; height: 300px; }
-            .handwriting-title { font-size: 38px; }
-            .receipt-paper { width: 300px; padding: 30px 20px 50px; }
-            
+
+            /* 第五/六面：小票适配 */
+            .receipt-paper { width: 85vw; max-width: 340px; padding: 30px 20px 60px; }
+            .tear-paper-top, .tear-paper-bottom { width: 85vw; max-width: 340px; padding: 30px 20px 60px; }
             .signature-img-container { width: 180px; right: 0; bottom: -10px; }
-            
-            .tear-paper-top, .tear-paper-bottom { width: 300px; padding: 30px 20px 50px; }
-            
-            .cheers-wrap { transform: scale(0.8); }
-            .s-curve-line { width: 400px; height: 300px; }
-            .cheers-title { font-size: 24px; }
+
+            /* 第七面：碰杯缩放 */
+            .cheers-wrap { transform: scale(0.8); margin-top: -20px; }
+            .s-curve-line { width: 100vw; height: 100vw; max-width: 500px; max-height: 500px; }
+            .cheers-text-wrap { margin-top: 20px; }
+            .cheers-title { font-size: 24px; letter-spacing: 6px; }
             .cheers-subtitle { font-size: 14px; }
         }
 
-        @media (max-width: 600px) {
-            .menu-card { width: 280px; min-height: 380px; padding: 30px 20px; }
+        /* 手机小屏额外调整 */
+        @media (max-width: 400px) {
+            .glass-container { transform: translate(-50%, -50%) scale(0.75); }
             .menu-title { font-size: 36px; }
-            .welcome-text { font-size: 17px; }
-            .welcome-text span { font-size: 20px; }
+            .welcome-text { font-size: 16px; }
+            .welcome-text span { font-size: 18px; }
+            
+            .profile-name { font-size: 32px; letter-spacing: 6px; }
+            .profile-eyebrow { font-size: 9px; letter-spacing: 4px; }
+            .info-box .value { font-size: 14px; }
+            .quote-group p { font-size: 14px; letter-spacing: 2px; }
 
-            .decor-branch-tl { width: 150px; height: 116px; opacity: 0.2; }
-            .decor-branch-br { width: 136px; height: 109px; opacity: 0.2; }
-            .decor-fireplace { width: 88px; height: 69px; opacity: 0.22; }
+            .name-outline { font-size: 20px; padding: 8px 20px; }
+            .price-number { font-size: 44px; }
+            .note-block { padding: 20px 16px; }
+            .block-title { font-size: 18px; }
+            .block-desc span { font-size: 12px; letter-spacing: 1px; }
 
-            .continue-hint { bottom: 28px; font-size: 9px; letter-spacing: 4px; padding-left: 4px; }
+            .rules-card { padding: 24px 16px; }
+            .rules-title { font-size: 20px; }
+            .rule-text { font-size: 12.5px; }
+
+            .handwriting-title { font-size: 32px; }
+            .confirm-paper { width: 85vw; height: 300px; }
+            
+            .cheers-wrap { transform: scale(0.65); margin-top: -40px; }
+            .cheers-text-wrap { margin-top: 0; }
         }
     </style>
 </head>
